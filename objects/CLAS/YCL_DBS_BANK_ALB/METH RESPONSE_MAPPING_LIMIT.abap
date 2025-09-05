@@ -2,6 +2,9 @@
     DATA ls_limit TYPE ydbs_t_limit.
     DATA(ls_time_info) = ycl_dbs_common=>get_local_time(  ).
     DATA(lt_xml) = ycl_dbs_common=>parse_xml( EXPORTING iv_xml_string  = iv_response ).
+    LOOP AT lt_xml ASSIGNING FIELD-SYMBOL(<ls_xml>) WHERE node_type = mc_value_node AND name = 'CdaBalance'.
+      REPLACE ',' IN <ls_xml>-value WITH '.'.
+    ENDLOOP.
     ls_limit = VALUE #( companycode    = ms_service_info-companycode
                         bankinternalid = ms_service_info-bankinternalid
                         customer       = ms_subscribe-customer

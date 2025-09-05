@@ -119,6 +119,8 @@
     SELECT * FROM ydbs_t_log
     WHERE temporary_document IS NOT INITIAL
       AND clearing_document IS NOT INITIAL
+      and companycode IN @ms_request-companycode
+      and bankinternalid in @ms_request-bankinternalid
       INTO TABLE @DATA(lt_send).
     IF sy-subrc = 0.
       SELECT bkpf~companycode,
@@ -169,6 +171,8 @@
                              INNER JOIN ydbs_t_subsmap AS subscriber ON subscriber~companycode = send~companycode
                                                                     AND subscriber~bankinternalid = send~bankinternalid
                                                                     AND subscriber~customer = customer~customer
+              where bseg~customer in @ms_request-customer
+                and bseg~DocumentDate in @ms_request-documentdate
               INTO CORRESPONDING FIELDS OF TABLE @lt_send_documents.
       IF sy-subrc = 0.
         SORT lt_send_documents BY companycode accountingdocument fiscalyear accountingdocumentitem bankinternalid.
