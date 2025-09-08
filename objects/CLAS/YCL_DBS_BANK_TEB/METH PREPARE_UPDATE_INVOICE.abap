@@ -14,6 +14,7 @@
       INTO @lv_payment_no.
 
     DATA(ls_log) = get_log(  ).
+        DATA(lv_messageno) = get_messageno(  ).
     lv_old_amount = ls_log-invoiceamount.
     lv_new_amount = ms_invoice_data-invoiceamount.
     CONDENSE: lv_old_amount, lv_new_amount.
@@ -26,17 +27,17 @@
 
     CONCATENATE ms_invoice_data-invoiceduedate+6(2) '/'
                 ms_invoice_data-invoiceduedate+4(2) '/'
-                ms_invoice_data-invoiceduedate+4
+                ms_invoice_data-invoiceduedate(4)
            INTO lv_new_vade.
 
     CONCATENATE ls_log-invoiceduedate+6(2) '/'
                 ls_log-invoiceduedate+4(2) '/'
-                ls_log-invoiceduedate+4
+                ls_log-invoiceduedate(4)
            INTO lv_old_vade.
 
     CONCATENATE ms_invoice_data-documentdate+6(2) '/'
                 ms_invoice_data-documentdate+4(2) '/'
-                ms_invoice_data-documentdate+4
+                ms_invoice_data-documentdate(4)
            INTO lv_bldat.
 
     CONCATENATE
@@ -56,7 +57,7 @@
             '<com:eskiFaturaVade>' lv_old_vade '</com:eskiFaturaVade>'
             '<com:yeniFaturaVade>' lv_new_vade '</com:yeniFaturaVade>'
             '<com:faturaTarih>' lv_bldat '</com:faturaTarih>'
-            '<com:mesajNo></com:mesajNo>'
+            '<com:mesajNo>' lv_messageno '</com:mesajNo>'
             '<com:aciklama></com:aciklama>'
           '</com:TEBDBSFaturaDuzeltme>'
        '</soapenv:Body>'

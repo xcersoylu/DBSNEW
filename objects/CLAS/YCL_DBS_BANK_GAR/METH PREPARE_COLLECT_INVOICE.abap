@@ -1,5 +1,4 @@
   METHOD prepare_collect_invoice.
-    DATA lv_request TYPE string.
     SELECT SINGLE trf_id
     FROM ydbs_t_log
     WHERE companycode = @ms_invoice_data-companycode
@@ -20,6 +19,6 @@
            '<pay:TrfUniqueID>' lv_trf_id '</pay:TrfUniqueID>'
         '</pay:SingleTrfRequest>'
      '</soapenv:Body>'
-  '</soapenv:Envelope>' INTO lv_request.
+  '</soapenv:Envelope>' INTO rv_request.
 
   ENDMETHOD.

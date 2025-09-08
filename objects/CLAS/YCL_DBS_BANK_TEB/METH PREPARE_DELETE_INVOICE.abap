@@ -5,7 +5,7 @@
       FROM ydbs_t_teb_pymno
       WHERE invoice_number EQ @ms_invoice_data-invoicenumber
       INTO @lv_payment_no.
-
+    DATA(lv_messageno) = get_messageno(  ).
     CONCATENATE
     '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:com="http://com.teb.tebdbs/">'
        '<soapenv:Header/>'
@@ -16,7 +16,7 @@
             '<com:anaFirma>' ms_service_info-additional_field1 '</com:anaFirma>'
             '<com:firmaMusteriNo>' ms_subscribe-subscriber_number '</com:firmaMusteriNo>'
             '<com:bankaOdemeNo>' lv_payment_no '</com:bankaOdemeNo>'
-            '<com:mesajNo></com:mesajNo>'
+            '<com:mesajNo>' lv_messageno '</com:mesajNo>'
             '<com:satisTmslBilgi></com:satisTmslBilgi>'
             '<com:aciklama></com:aciklama>'
           '</com:TEBDBSFaturaIptal>'
