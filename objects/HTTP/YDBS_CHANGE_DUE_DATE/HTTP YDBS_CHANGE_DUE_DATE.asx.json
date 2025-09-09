@@ -30,6 +30,18 @@
   ]
  },
  {
+  "table":"UCONHTTPSERVHAND",
+  "data":
+  [
+   {
+    "ID":"YDBS_CHANGE_DUE_DATE",
+    "VERSION":"A",
+    "SERVICEORDER":1,
+    "SERVICEHANDLER":"YCL_DBS_CHANGE_DUE_DATE"
+   }
+  ]
+ },
+ {
   "table":"UCONHTTPSERVHEAD",
   "data":
   [
@@ -40,8 +52,8 @@
     "CREATEDON":"2025-08-28",
     "CREATEDAT":"17:45:12",
     "CHANGEDBY":"SAP_CUSTOMER",
-    "CHANGEDON":"2025-08-28",
-    "CHANGEDAT":"17:45:12",
+    "CHANGEDON":"2025-09-09",
+    "CHANGEDAT":"14:43:49",
     "CREATED_BY_OBJ_PGMID":"",
     "CREATED_BY_OBJ_TYPE":"",
     "CREATED_BY_OBJ_NAME":"",
@@ -53,6 +65,18 @@
     "ICFPARGUID":"",
     "ABAP_LANGUAGE_VERSION":"5",
     "XPRA_UPDATE":""
+   }
+  ]
+ },
+ {
+  "table":"UCONHTTPSERVTEXT",
+  "data":
+  [
+   {
+    "ID":"YDBS_CHANGE_DUE_DATE",
+    "VERSION":"A",
+    "LANG":"T",
+    "SHORTTEXT":"Vade Tarihi Değiştir"
    }
   ]
  }

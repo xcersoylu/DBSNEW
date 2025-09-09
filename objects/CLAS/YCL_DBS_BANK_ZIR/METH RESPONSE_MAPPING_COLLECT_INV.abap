@@ -69,7 +69,7 @@
                                                                WHEN ls_xml_response-faturadovizkodu = '88' THEN 'TRY'
                                                                ) ).
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_xml_response-cevapmesaji

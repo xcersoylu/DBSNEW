@@ -22,7 +22,7 @@
                         over_limit      = VALUE #( lt_xml[ node_type = mc_value_node name = 'GarantisizFaturaToplam' ]-value OPTIONAL ) ).
     MODIFY ydbs_t_limit FROM @ls_limit.
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 013 message_V1 = ms_subscribe-customer ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_error_text-value

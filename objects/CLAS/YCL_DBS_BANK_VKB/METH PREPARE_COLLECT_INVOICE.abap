@@ -25,7 +25,7 @@
              '<![CDATA['
 '<BaseInput>'
                    '<BaseMusteriNo>' ms_service_info-additional_field1 '</BaseMusteriNo>'
-                   '<BaseKurumKodu>' ms_service_info-additional_field2 '</BaseKurumKodu>'
+                   '<BaseKurumKodu>' ms_service_info-additional_field1 '</BaseKurumKodu>'
                    '<BaseKurumKullanici>' ms_service_info-username '</BaseKurumKullanici>'
                    '<BaseKurumSifre>' ms_service_info-password '</BaseKurumSifre>'
     '<BaseKurumOperasyon>SorgulaOnlineFatura</BaseKurumOperasyon>'

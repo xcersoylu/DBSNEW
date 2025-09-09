@@ -42,7 +42,7 @@
                                    payment_date = ls_response-odeme_tarihi
                                    payment_currency = ls_response-para_birimi ).
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_json-errordetails-errormessage

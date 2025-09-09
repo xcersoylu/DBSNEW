@@ -41,7 +41,7 @@
                                    payment_date = |{ ls_xml_response-sonodemetarihi(4) }{ ls_xml_response-sonodemetarihi+5(2) }{ ls_xml_response-sonodemetarihi+8(2) }|
                                    payment_currency = ls_xml_response-dovizkodu ).
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_error_text-value

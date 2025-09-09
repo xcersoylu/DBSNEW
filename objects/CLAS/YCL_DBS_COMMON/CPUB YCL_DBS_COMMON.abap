@@ -37,3 +37,6 @@ CLASS ycl_dbs_common DEFINITION
         VALUE(value_type_string) TYPE string.
     CLASS-METHODS get_local_time
       RETURNING VALUE(local_time_info) TYPE ty_local_time_info.
+    class-METHODS generate_random IMPORTING iv_randomset type string
+                                            iv_length type i
+                                  RETURNING VALUE(rv_string) TYPE string.

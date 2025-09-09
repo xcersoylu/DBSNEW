@@ -78,7 +78,7 @@
       CONCATENATE ls_xml_response-detay-islemtrh(4) ls_xml_response-detay-islemtrh+5(2)
       ls_xml_response-detay-islemtrh+8(2) INTO es_collect_detail-payment_date.
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_error_text-value

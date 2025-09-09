@@ -38,7 +38,7 @@
                                    payment_date = ls_response-trandate
                                    payment_currency = ls_response-fec ).
     ELSE.
-      APPEND VALUE #( id = mc_id type = mc_error number = 004 ) TO rt_messages.
+      APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
         EXPORTING
           iv_message  = ls_json-result_message
