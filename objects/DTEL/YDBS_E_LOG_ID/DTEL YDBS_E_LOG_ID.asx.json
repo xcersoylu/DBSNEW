@@ -4,10 +4,10 @@
   "data":
   [
    {
-    "ROLLNAME":"YDBS_E_METHODNAME",
+    "ROLLNAME":"YDBS_E_LOG_ID",
     "AS4LOCAL":"L",
     "AS4VERS":0,
-    "DOMNAME":"YDBS_D_TEXT50",
+    "DOMNAME":"",
     "ROUTPUTLEN":0,
     "MEMORYID":"",
     "LOGFLAG":"",
@@ -28,15 +28,15 @@
     "SHLPFIELD":"",
     "DEFFDNAME":"",
     "DATATYPE":"CHAR",
-    "LENG":50,
+    "LENG":13,
     "DECIMALS":0,
-    "OUTPUTLEN":50,
-    "LOWERCASE":"X",
+    "OUTPUTLEN":13,
+    "LOWERCASE":"",
     "SIGNFLAG":"",
     "CONVEXIT":"",
     "VALEXI":"",
     "ENTITYTAB":"",
-    "REFKIND":"D",
+    "REFKIND":"",
     "REFTYPE":"",
     "PROXYTYPE":"",
     "LTRFLDDIS":"",
@@ -51,26 +51,26 @@
   "data":
   [
    {
-    "ROLLNAME":"YDBS_E_METHODNAME",
+    "ROLLNAME":"YDBS_E_LOG_ID",
     "DDLANGUAGE":"E",
     "AS4LOCAL":"N",
     "AS4VERS":0,
-    "DDTEXT":"Method Name",
-    "REPTEXT":"Method Name",
-    "SCRTEXT_S":"Method Nam",
-    "SCRTEXT_M":"Method Name",
-    "SCRTEXT_L":"Method Name"
+    "DDTEXT":"Log ID",
+    "REPTEXT":"Log ID",
+    "SCRTEXT_S":"Log ID",
+    "SCRTEXT_M":"Log ID",
+    "SCRTEXT_L":"Log ID"
    },
    {
-    "ROLLNAME":"YDBS_E_METHODNAME",
+    "ROLLNAME":"YDBS_E_LOG_ID",
     "DDLANGUAGE":"T",
     "AS4LOCAL":"N",
     "AS4VERS":0,
-    "DDTEXT":"Metot Adı",
-    "REPTEXT":"Metot Adı",
-    "SCRTEXT_S":"Metot Adı",
-    "SCRTEXT_M":"Metot Adı",
-    "SCRTEXT_L":"Metot Adı"
+    "DDTEXT":"Log ID",
+    "REPTEXT":"Log ID",
+    "SCRTEXT_S":"Log ID",
+    "SCRTEXT_M":"Log ID",
+    "SCRTEXT_L":"Log ID"
    }
   ]
  },
@@ -79,7 +79,7 @@
   "data":
   [
    {
-    "TYPENAME":"YDBS_E_METHODNAME",
+    "TYPENAME":"YDBS_E_LOG_ID",
     "STATE":"N",
     "TYPEKIND":"DTEL"
    }
@@ -92,7 +92,7 @@
    {
     "PGMID":"R3TR",
     "OBJECT":"DTEL",
-    "OBJ_NAME":"YDBS_E_METHODNAME",
+    "OBJ_NAME":"YDBS_E_LOG_ID",
     "KORRNUM":"",
     "SRCSYSTEM":"...",
     "AUTHOR":"SAP_CUSTOMER",
@@ -109,8 +109,8 @@
     "CRELEASE":"",
     "DELFLAG":"",
     "TRANSLTTXT":"",
-    "CREATED_ON":"2025-08-29",
-    "CHECK_DATE":"2025-08-29",
+    "CREATED_ON":"2025-09-10",
+    "CHECK_DATE":"2025-09-10",
     "CHECK_CFG":""
    }
   ]

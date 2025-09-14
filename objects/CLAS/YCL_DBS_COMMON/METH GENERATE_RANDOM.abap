@@ -1,5 +1,5 @@
-  METHOD GENERATE_RANDOM.
- " 1. Karakter seti
+  METHOD generate_random.
+    " 1. Karakter seti
     DATA(lv_chars)    = '0123456789'.
     DATA(lv_char_len) = strlen( lv_chars ).
 

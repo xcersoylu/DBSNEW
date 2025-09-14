@@ -61,6 +61,10 @@
       WHERE bsid~documentdate IN @ms_request-documentdate
         AND bsid~debitcreditcode = 'S'
         AND EXISTS ( SELECT * FROM ydbs_t_doctype WHERE companycode = bsid~companycode AND document_type = bsid~accountingdocumenttype )
+        AND NOT EXISTS ( SELECT * FROM ydbs_t_log WHERE companycode = bsid~companycode
+                                                    AND accountingdocument = bsid~accountingdocument
+                                                    AND fiscalyear = bsid~fiscalyear
+                                                    AND accountingdocumentitem = bsid~accountingdocumentitem )
       INTO CORRESPONDING FIELDS OF TABLE @ms_response-data.
     IF sy-subrc = 0.
       SORT ms_response-data BY companycode accountingdocument fiscalyear accountingdocumentitem bankinternalid.
@@ -117,10 +121,10 @@
     ENDIF.
 *******gönderilmişler*****
     SELECT * FROM ydbs_t_log
-    WHERE temporary_document IS NOT INITIAL
-      AND clearing_document IS NOT INITIAL
-      and companycode IN @ms_request-companycode
-      and bankinternalid in @ms_request-bankinternalid
+*    WHERE temporary_document IS NOT INITIAL
+*      AND clearing_document IS NOT INITIAL
+      where companycode IN @ms_request-companycode
+      AND bankinternalid IN @ms_request-bankinternalid
       INTO TABLE @DATA(lt_send).
     IF sy-subrc = 0.
       SELECT bkpf~companycode,
@@ -143,7 +147,7 @@
              send~invoiceduedate,
              bseg~absoluteamountintransaccrcy,
              bseg~transactioncurrency,
-             bseg~absoluteamountintransaccrcy AS invoiceamount,
+             send~invoiceamount,
              bkpf~documentreferenceid,
              bseg~paymentmethod,
              bseg~paymentblockingreason,
@@ -171,8 +175,8 @@
                              INNER JOIN ydbs_t_subsmap AS subscriber ON subscriber~companycode = send~companycode
                                                                     AND subscriber~bankinternalid = send~bankinternalid
                                                                     AND subscriber~customer = customer~customer
-              where bseg~customer in @ms_request-customer
-                and bseg~DocumentDate in @ms_request-documentdate
+              WHERE bseg~customer IN @ms_request-customer
+                AND bseg~documentdate IN @ms_request-documentdate
               INTO CORRESPONDING FIELDS OF TABLE @lt_send_documents.
       IF sy-subrc = 0.
         SORT lt_send_documents BY companycode accountingdocument fiscalyear accountingdocumentitem bankinternalid.

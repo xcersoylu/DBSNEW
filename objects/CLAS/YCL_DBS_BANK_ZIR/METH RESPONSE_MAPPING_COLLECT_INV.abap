@@ -7,6 +7,7 @@
               sonodemetarihi          TYPE string,
               faturatutari            TYPE string,
               faturadovizkodu         TYPE string,
+              tahsilattarihi          type string,
               tahsilattutari          TYPE string,
               tahsilatdovizkodu       TYPE string,
               hesabakonanbloketutari  TYPE string,
@@ -22,12 +23,12 @@
     DATA lv_payment_date TYPE d.
     DATA(lt_xml) = ycl_dbs_common=>parse_xml( EXPORTING iv_xml_string  = iv_response ).
 
-    LOOP AT lt_xml INTO DATA(ls_xml_line) WHERE name = 'CevapKodu'
+    LOOP AT lt_xml INTO DATA(ls_xml_line) WHERE name = 'FaturaSorguCevap'
                                             AND node_type = 'CO_NT_ELEMENT_OPEN'.
-      APPEND INITIAL LINE TO lt_xml_response ASSIGNING FIELD-SYMBOL(<ls_response_line>).
       DATA(lv_index) = sy-tabix + 1.
+      APPEND INITIAL LINE TO lt_xml_response ASSIGNING FIELD-SYMBOL(<ls_response_line>).
       LOOP AT lt_xml INTO DATA(ls_xml_line2) FROM lv_index.
-        IF ( ls_xml_line2-name = 'CevapKodu' AND ls_xml_line2-node_type = 'CO_NT_ELEMENT_CLOSE' ).
+        IF ( ls_xml_line2-name = 'FaturaSorguCevap' AND ls_xml_line2-node_type = 'CO_NT_ELEMENT_CLOSE' ).
           EXIT.
         ENDIF.
         CHECK ls_xml_line2-node_type = 'CO_NT_VALUE'.
@@ -38,32 +39,11 @@
       ENDLOOP.
     ENDLOOP.
 
-    READ TABLE lt_xml_response INTO DATA(ls_xml_response) WITH KEY faturano = ms_invoice_data-invoicenumber.
+    READ TABLE lt_xml_response INTO DATA(ls_xml_response) WITH KEY faturano = ms_invoice_data-invoicenumber
+                                                                   kayitdurumu = 'A'.
     IF ls_xml_response-cevapkodu = '0'. "başarılı
-
-      lv_day = ls_xml_response-kayitzaman(2).
-      IF lv_day CS '.'.
-        CONCATENATE '0' ls_xml_response-kayitzaman(1) INTO lv_day.
-        lv_month = ls_xml_response-kayitzaman+2(2).
-        IF lv_month CS '.'.
-          CONCATENATE '0' ls_xml_response-kayitzaman+2(1) INTO lv_month.
-          lv_year = ls_xml_response-kayitzaman+4(4).
-        ELSE.
-          lv_year = ls_xml_response-kayitzaman+5(4).
-        ENDIF.
-      ELSE.
-        lv_month = ls_xml_response-kayitzaman+3(2).
-        IF lv_month CS '.'.
-          CONCATENATE '0' ls_xml_response-kayitzaman+3(1) INTO lv_month.
-          lv_year = ls_xml_response-kayitzaman+5(4).
-        ELSE.
-          lv_year = ls_xml_response-kayitzaman+6(4).
-        ENDIF.
-      ENDIF.
-      CONCATENATE lv_year lv_month lv_day INTO lv_payment_date.
-
       es_collect_detail = VALUE #( payment_amount = ls_xml_response-faturatutari
-                                   payment_date = lv_payment_date
+                                   payment_date = ls_xml_response-tahsilattarihi+6(4) && ls_xml_response-tahsilattarihi+2(2) && ls_xml_response-tahsilattarihi(2)
                                    payment_currency = COND #(  WHEN ls_xml_response-faturadovizkodu = '1' THEN 'USD'
                                                                WHEN ls_xml_response-faturadovizkodu = '2' THEN 'EUR'
                                                                WHEN ls_xml_response-faturadovizkodu = '88' THEN 'TRY'

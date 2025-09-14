@@ -4,10 +4,10 @@
   "data":
   [
    {
-    "TYPENAME":"YDBS_TT_INVOICE_COCKPIT_DATA",
+    "TYPENAME":"YDBS_T_ALL_LOG_TAB",
     "AS4LOCAL":"N",
     "ACTFLAG":"",
-    "ROWTYPE":"YDBS_S_INVOICE_COCKPIT_DATA",
+    "ROWTYPE":"YDBS_T_ALL_LOG",
     "ROWKIND":"S",
     "DATATYPE":"STRU",
     "LENG":0,
@@ -17,7 +17,7 @@
     "KEYKIND":"N",
     "KEYFDCOUNT":0,
     "GENERIC":"",
-    "TYPELEN":1088,
+    "TYPELEN":344,
     "AS4USER":"SAP_CUSTOMER",
     "AS4DATE":"0000-00-00",
     "AS4TIME":"00:00:00",
@@ -37,10 +37,10 @@
   "data":
   [
    {
-    "TYPENAME":"YDBS_TT_INVOICE_COCKPIT_DATA",
+    "TYPENAME":"YDBS_T_ALL_LOG_TAB",
     "DDLANGUAGE":"T",
     "AS4LOCAL":"N",
-    "DDTEXT":"Fatura Kokpiti Ekran Verisi"
+    "DDTEXT":"DBS Tüm Loglar"
    }
   ]
  },
@@ -49,7 +49,7 @@
   "data":
   [
    {
-    "TYPENAME":"YDBS_TT_INVOICE_COCKPIT_DATA",
+    "TYPENAME":"YDBS_T_ALL_LOG_TAB",
     "STATE":"N",
     "TYPEKIND":"TTYP"
    }
@@ -62,7 +62,7 @@
    {
     "PGMID":"R3TR",
     "OBJECT":"TTYP",
-    "OBJ_NAME":"YDBS_TT_INVOICE_COCKPIT_DATA",
+    "OBJ_NAME":"YDBS_T_ALL_LOG_TAB",
     "KORRNUM":"",
     "SRCSYSTEM":"...",
     "AUTHOR":"SAP_CUSTOMER",
@@ -79,8 +79,8 @@
     "CRELEASE":"",
     "DELFLAG":"",
     "TRANSLTTXT":"",
-    "CREATED_ON":"2025-05-13",
-    "CHECK_DATE":"2025-05-13",
+    "CREATED_ON":"2025-09-10",
+    "CHECK_DATE":"2025-09-10",
     "CHECK_CFG":""
    }
   ]

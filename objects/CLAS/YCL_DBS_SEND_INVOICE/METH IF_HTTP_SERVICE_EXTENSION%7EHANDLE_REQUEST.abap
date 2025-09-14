@@ -2,6 +2,7 @@
     DATA lt_messages TYPE ydbs_tt_bapiret2.
     DATA lo_fi_doc TYPE REF TO ycl_dbs_create_financial_doc.
     DATA lt_log TYPE TABLE OF ydbs_t_log.
+    DATA lt_all_log TYPE ydbs_t_all_log_tab.
     DATA(lv_request_body) = request->get_text( ).
     DATA(lv_get_method) = request->get_method( ).
     /ui2/cl_json=>deserialize( EXPORTING json = lv_request_body CHANGING data = ms_request ).
@@ -56,13 +57,34 @@
                           invoiceamount           = ls_request-invoiceamount
                           transactioncurrency     = ls_request-transactioncurrency
                           invoicestatus           = 'S'
-                          bankinternalid          = ls_Request-bankinternalid
+                          bankinternalid          = ls_request-bankinternalid
                           temporary_document      = lv_temp_doc
                           temporary_document_year = lv_temp_year
                           clearing_document       = lv_clearing_doc
                           clearing_document_year  = lv_clearing_year
                           batch_id                = lo_bank->mv_batch_id
                           trf_id                  = lo_bank->mv_trf_id ) TO lt_log.
+
+*log kayıt
+          APPEND VALUE #( log_id                  = ls_request-log_id
+                          companycode             = ls_request-companycode
+                          accountingdocument      = ls_request-accountingdocument
+                          fiscalyear              = ls_request-fiscalyear
+                          accountingdocumentitem  = ls_request-accountingdocumentitem
+                          invoicenumber           = ls_request-invoicenumber
+                          invoiceduedate          = ls_request-invoiceduedate
+                          invoiceamount           = ls_request-invoiceamount
+                          transactioncurrency     = ls_request-transactioncurrency
+                          invoicestatus           = 'S'
+                          bankinternalid          = ls_request-bankinternalid
+                          temporary_document      = lv_temp_doc
+                          temporary_document_year = lv_temp_year
+                          clearing_document       = lv_clearing_doc
+                          clearing_document_year  = lv_clearing_year
+                          batch_id                = lo_bank->mv_batch_id
+                          trf_id                  = lo_bank->mv_trf_id
+                          timestamp               = ycl_dbs_common=>get_local_time(  )-timestamp
+                          createdby               = sy-uname                       ) TO lt_all_log.
 
         ENDIF.
 *clear
@@ -72,6 +94,12 @@
       ENDLOOP.
       IF lt_log IS NOT INITIAL.
         MODIFY ydbs_t_log FROM TABLE @lt_log.
+      ENDIF.
+      IF lt_all_log IS NOT INITIAL.
+        ycl_dbs_common=>save_dbs_log(
+          EXPORTING
+            it_log    = lt_all_log
+        ).
       ENDIF.
     ENDIF.
     IF ms_response-messages IS NOT INITIAL.

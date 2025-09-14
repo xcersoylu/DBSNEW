@@ -35,7 +35,7 @@
     '<BaseOndalikAyrac>.</BaseOndalikAyrac>'
     '<BaseInputData>'
       '<DTOFatura>'
-                           '<AnaFirmaKurumUrunTanimId>' ms_service_info-additional_field2 '</AnaFirmaKurumUrunTanimId>'
+                           '<AnaFirmaKurumTanimId>' ms_service_info-additional_field2 '</AnaFirmaKurumTanimId>'
                            '<AnaFirmadakiBayiKodu>' ms_subscribe-subscriber_number '</AnaFirmadakiBayiKodu>'
         '<OperasyonTuru>' '200' '</OperasyonTuru>'
         '<FaturaNo>' ms_invoice_data-invoicenumber'</FaturaNo>'
@@ -57,5 +57,6 @@
    ']]>'
             '</tem:baseInputData>'
             '</tem:Kurum_OnlineKEK>'
-         '</soapenv:Body>' INTO rv_request.
+         '</soapenv:Body>'
+         '</soapenv:Envelope>' INTO rv_request.
   ENDMETHOD.
