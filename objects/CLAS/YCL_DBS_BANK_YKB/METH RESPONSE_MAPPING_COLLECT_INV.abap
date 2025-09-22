@@ -38,8 +38,8 @@
     IF ls_error_code-value = '0'. "başarılı
       LOOP AT lt_xml INTO DATA(ls_xml_line) WHERE name = 'FaturaDetay'
                                               AND node_type = 'CO_NT_ELEMENT_OPEN'.
-        APPEND INITIAL LINE TO lt_xml_response ASSIGNING FIELD-SYMBOL(<ls_response_line>).
         DATA(lv_index) = sy-tabix + 1.
+        APPEND INITIAL LINE TO lt_xml_response ASSIGNING FIELD-SYMBOL(<ls_response_line>).
         LOOP AT lt_xml INTO DATA(ls_xml_line2) FROM lv_index.
           IF ( ls_xml_line2-name = 'FaturaDetay' AND ls_xml_line2-node_type = 'CO_NT_ELEMENT_CLOSE' ).
             EXIT.

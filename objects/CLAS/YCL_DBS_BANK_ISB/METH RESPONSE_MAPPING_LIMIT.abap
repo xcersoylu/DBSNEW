@@ -9,6 +9,7 @@
               unexpiredrisk  TYPE string,
             END OF ty_xml.
     DATA lt_xml_response TYPE TABLE OF ty_xml.
+    DATA lv_subscribercode TYPE string.
     DATA ls_limit TYPE ydbs_t_limit.
     DATA(ls_time_info) = ycl_dbs_common=>get_local_time(  ).
     DATA(lt_xml) = ycl_dbs_common=>parse_xml( EXPORTING iv_xml_string  = iv_response ).
@@ -26,9 +27,13 @@
         ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_response_line> TO FIELD-SYMBOL(<lv_value>).
         CHECK sy-subrc = 0.
         <lv_value> = ls_xml_line2-value.
+        IF ls_xml_line2-name = 'SUBSCRIBERCODE'.
+          CONDENSE <lv_value> NO-GAPS.
+        ENDIF.
       ENDLOOP.
     ENDLOOP.
-
+    lv_subscribercode = ms_subscribe-subscriber_number.
+    CONDENSE lv_subscribercode.
     ls_limit = VALUE #( companycode    = ms_service_info-companycode
                         bankinternalid = ms_service_info-bankinternalid
                         customer       = ms_subscribe-customer
@@ -36,8 +41,8 @@
                         limit_timestamp = ls_time_info-timestamp
                         limit_date      = ls_time_info-date
                         limit_time      = ls_time_info-time
-                        total_limit     = VALUE #( lt_xml_response[ subscribercode = ms_subscribe-subscriber_number ]-totallimit OPTIONAL )
-                        available_limit = VALUE #( lt_xml_response[ subscribercode = ms_subscribe-subscriber_number ]-availablelimit OPTIONAL )
-                        risk            = VALUE #( lt_xml_response[ subscribercode = ms_subscribe-subscriber_number ]-unexpiredrisk OPTIONAL ) ).
+                        total_limit     = VALUE #( lt_xml_response[ subscribercode = lv_subscribercode ]-totallimit OPTIONAL )
+                        available_limit = VALUE #( lt_xml_response[ subscribercode = lv_subscribercode ]-availablelimit OPTIONAL )
+                        risk            = VALUE #( lt_xml_response[ subscribercode = lv_subscribercode ]-unexpiredrisk OPTIONAL ) ).
     MODIFY ydbs_t_limit FROM @ls_limit.
   ENDMETHOD.

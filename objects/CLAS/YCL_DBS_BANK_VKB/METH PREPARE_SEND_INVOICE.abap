@@ -38,7 +38,7 @@
                            '<AnaFirmaKurumTanimId>' ms_service_info-additional_field2 '</AnaFirmaKurumTanimId>'
                            '<AnaFirmadakiBayiKodu>' ms_subscribe-subscriber_number '</AnaFirmadakiBayiKodu>'
         '<OperasyonTuru>' '100' '</OperasyonTuru>'
-        '<FaturaNo>' ms_invoice_data-invoicenumber'</FaturaNo>'
+        '<FaturaNo>' ms_invoice_data-invoicenumber '</FaturaNo>'
         '<FaturaTutari>' lv_amount '</FaturaTutari>'
         '<DovizCinsi>' lv_waers '</DovizCinsi>'
         '<AdSoyad></AdSoyad>'
