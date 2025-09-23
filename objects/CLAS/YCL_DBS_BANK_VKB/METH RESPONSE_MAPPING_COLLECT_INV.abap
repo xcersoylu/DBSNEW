@@ -36,6 +36,11 @@
            END OF ty_fatura,
            tt_fatura TYPE TABLE OF ty_fatura WITH DEFAULT KEY.
     DATA lt_xml_response TYPE tt_fatura.
+    DATA lv_date TYPE string.
+    DATA lv_time TYPE string.
+    DATA lv_year TYPE c LENGTH 4.
+    DATA lv_month TYPE c LENGTH 2.
+    DATA lv_day TYPE c LENGTH 2.
     DATA(lv_response) = iv_response.
     REPLACE ALL OCCURRENCES OF '&lt;' IN lv_response WITH '<'.
     REPLACE ALL OCCURRENCES OF '&gt;' IN lv_response WITH '>'.
@@ -97,10 +102,9 @@
       IF ls_xml_response-faturadurum = 'Odendi'.
         es_collect_detail-payment_amount = ls_xml_response-odenentutar.
         es_collect_detail-payment_currency = ls_xml_response-tahsilatdovizcinsi.
-        CONCATENATE ls_xml_response-tahsilattarihi+6(4)
-                    ls_xml_response-tahsilattarihi+3(2)
-                    ls_xml_response-tahsilattarihi(2)
-        INTO es_collect_detail-payment_date.
+        SPLIT ls_xml_response-tahsilattarihi AT space INTO lv_date lv_time.
+        SPLIT lv_date AT '.' INTO lv_day lv_month lv_year.
+        es_collect_detail-payment_date = |{ lv_year }{ lv_month ALPHA = IN }{ lv_day ALPHA = IN }|.
       ELSE.
         APPEND VALUE #( id = mc_id type = mc_error number = 020 message_v1 = ls_xml_response-faturadurum  ) TO rt_messages.
       ENDIF.
