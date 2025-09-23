@@ -1,4 +1,10 @@
   METHOD prepare_update_limit.
+    DATA lv_waers  TYPE c LENGTH 3.
+    IF ms_service_info-currency EQ 'TRY'.
+      lv_waers = 'TL'.
+    ELSE.
+      lv_waers = ms_invoice_data-transactioncurrency.
+    ENDIF.
     CONCATENATE
     '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ykb="http://YKB.OnlineDbs.Webservice/">'
         '<soapenv:Header/>'
@@ -11,7 +17,7 @@
                 '<!--Optional:-->'
                 '<ykb:Aboneno>' ms_subscribe-subscriber_number '</ykb:Aboneno>'
                 '<!--Optional:-->'
-                '<ykb:Doviz>' ms_service_info-additional_field3 '</ykb:Doviz>'
+                '<ykb:Doviz>' lv_waers '</ykb:Doviz>'
             '</ykb:Limit_Sorgu>'
         '</soapenv:Body>'
     '</soapenv:Envelope>' INTO rv_request.

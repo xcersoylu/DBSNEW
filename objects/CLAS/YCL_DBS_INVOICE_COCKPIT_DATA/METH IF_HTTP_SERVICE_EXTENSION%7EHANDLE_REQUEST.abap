@@ -123,7 +123,7 @@
     SELECT * FROM ydbs_t_log
 *    WHERE temporary_document IS NOT INITIAL
 *      AND clearing_document IS NOT INITIAL
-      where companycode IN @ms_request-companycode
+      WHERE companycode IN @ms_request-companycode
       AND bankinternalid IN @ms_request-bankinternalid
       INTO TABLE @DATA(lt_send).
     IF sy-subrc = 0.
@@ -179,6 +179,28 @@
                 AND bseg~documentdate IN @ms_request-documentdate
               INTO CORRESPONDING FIELDS OF TABLE @lt_send_documents.
       IF sy-subrc = 0.
+*denkleştirme belgesi yazılamayan satırlar varsa onlar bulunuyor.
+        DATA(lt_missing_clearing_doc) = lt_send_documents.
+        DELETE lt_missing_clearing_doc WHERE temporary_document IS INITIAL.
+        DELETE lt_missing_clearing_doc WHERE clearing_document IS NOT INITIAL.
+        IF lt_missing_clearing_doc IS NOT INITIAL.
+          SELECT DISTINCT bseg~companycode,
+                          bseg~accountingdocument,
+                          bseg~fiscalyear,
+                          bseg~clearingjournalentry
+                 FROM @lt_missing_clearing_doc AS clearing_doc
+                   INNER JOIN i_journalentryitem AS bseg
+                   ON bseg~accountingdocument = clearing_doc~temporary_document
+                  AND bseg~companycode = clearing_doc~companycode
+                  AND bseg~fiscalyear = clearing_doc~temporary_document_year
+          WHERE bseg~sourceledger = '0L'
+            AND bseg~ledger = '0L'
+            AND bseg~clearingjournalentry IS NOT INITIAL
+          ORDER BY bseg~companycode, bseg~accountingdocument,bseg~fiscalyear
+          INTO TABLE @DATA(lt_clearing_doc).
+        ENDIF.
+**************
+
         SORT lt_send_documents BY companycode accountingdocument fiscalyear accountingdocumentitem bankinternalid.
         DELETE ADJACENT DUPLICATES FROM lt_send_documents COMPARING companycode accountingdocument fiscalyear accountingdocumentitem bankinternalid.
         SELECT limit~* FROM ydbs_t_limit AS limit INNER JOIN @lt_send_documents AS itab ON limit~companycode = itab~companycode
@@ -204,6 +226,22 @@
             <ls_send_data>-over_limit             = ls_send_limit-over_limit.
           ENDIF.
           <ls_send_data>-invoicestatustext = VALUE #( lt_invoicestatus[ value = <ls_send_data>-invoicestatus ]-description OPTIONAL ).
+          IF <ls_send_data>-temporary_document IS NOT INITIAL AND <ls_send_data>-clearing_document IS INITIAL.
+            READ TABLE lt_clearing_doc INTO DATA(ls_clearing_doc) WITH KEY companycode = <ls_send_data>-companycode
+                                                                           accountingdocument = <ls_send_data>-temporary_document
+                                                                           fiscalyear = <ls_send_data>-temporary_document_year BINARY SEARCH.
+            IF sy-subrc = 0.
+              <ls_send_data>-clearing_document = ls_clearing_doc-clearingjournalentry.
+              <ls_send_data>-clearing_document_year = <ls_send_data>-temporary_document_year.
+*log a da yaz
+               update ydbs_t_log
+                  set clearing_document = @<ls_send_data>-clearing_document ,
+                      clearing_document_year = @<ls_send_data>-clearing_document_year
+                where companycode = @<ls_send_Data>-companycode
+                  and accountingdocument = @<ls_Send_data>-accountingdocument
+                  and fiscalyear = @<ls_Send_data>-fiscalyear.
+            ENDIF.
+          ENDIF.
         ENDLOOP.
         APPEND LINES OF lt_send_documents TO ms_response-data.
       ENDIF.

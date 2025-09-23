@@ -5,30 +5,16 @@
               fattutar    TYPE string,
               doviz       TYPE string,
               sonodmtarih TYPE string,
+              odmtarih    type string,
               odntutarytl TYPE string,
               odntutarusd TYPE string,
               refno       TYPE string,
               statu       TYPE string,
+              bilgi1      type string,
+              bilgi2      type string,
             END OF ty_satir,
-            BEGIN OF ty_detay,
-              trxno    TYPE string,
-              seqno    TYPE string,
-              islemtrh TYPE string,
-              islemtip TYPE string,
-              urun     TYPE string,
-              kurum    TYPE string,
-              satir    TYPE ty_satir,
-            END OF ty_detay,
-            BEGIN OF ty_fatura_detay,
-              detay TYPE ty_detay,
-            END OF ty_fatura_detay,
-            tt_fatura_detay TYPE TABLE OF ty_fatura_detay WITH EMPTY KEY,
-            BEGIN OF ty_xml,
-              faturadetay TYPE tt_fatura_detay,
-            END OF ty_xml.
-    DATA lt_xml_response TYPE tt_fatura_detay. "ty_xml.
-    FIELD-SYMBOLS <ls_satir> TYPE ty_satir.
-    FIELD-SYMBOLS <ls_detay> TYPE ty_detay.
+            tt_Satir type table of ty_satir with default key.
+    DATA lt_xml_response TYPE tt_satir.
     DATA(lv_response) = iv_response.
     REPLACE ALL OCCURRENCES OF '&lt;' IN lv_response WITH '<'.
     REPLACE ALL OCCURRENCES OF '&gt;' IN lv_response WITH '>'.
@@ -36,47 +22,38 @@
     READ TABLE lt_xml INTO DATA(ls_error_code) WITH KEY node_type = mc_value_node name = 'pErrCode'.
     READ TABLE lt_xml INTO DATA(ls_error_text) WITH KEY node_type = mc_value_node name = 'pErrText'.
     IF ls_error_code-value = '0'. "başarılı
-      LOOP AT lt_xml INTO DATA(ls_xml_line) WHERE name = 'FaturaDetay'
+      LOOP AT lt_xml INTO DATA(ls_xml_line) WHERE name = 'SATIR'
                                               AND node_type = 'CO_NT_ELEMENT_OPEN'.
         DATA(lv_index) = sy-tabix + 1.
         APPEND INITIAL LINE TO lt_xml_response ASSIGNING FIELD-SYMBOL(<ls_response_line>).
         LOOP AT lt_xml INTO DATA(ls_xml_line2) FROM lv_index.
-          IF ( ls_xml_line2-name = 'FaturaDetay' AND ls_xml_line2-node_type = 'CO_NT_ELEMENT_CLOSE' ).
+          IF ( ls_xml_line2-name = 'SATIR' AND ls_xml_line2-node_type = 'CO_NT_ELEMENT_CLOSE' ).
             EXIT.
           ENDIF.
           CHECK ls_xml_line2-node_type = 'CO_NT_VALUE'.
           CASE ls_xml_line2-name.
-            WHEN 'Detay'.
+            WHEN 'AboneNo' OR 'FaturaNo' OR 'FatTutar' OR 'Doviz' OR 'SonOdmTarih' OR 'OdmTarih' OR
+                 'OdnTutarYTL' OR 'OdnTutarUSD' OR 'RefNo' OR 'Statu' OR 'Bilgi1' OR 'Bilgi2'.
               TRANSLATE ls_xml_line2-name TO UPPER CASE.
-              ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_response_line> TO <ls_detay>.
-            WHEN 'TRXNO' OR 'SEQNO' OR 'ISLEMTRH' OR 'ISLEMTIP' OR 'URUN' OR 'KURUM'.
-              TRANSLATE ls_xml_line2-name TO UPPER CASE.
-              ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_detay> TO FIELD-SYMBOL(<lv_value>).
-              CHECK sy-subrc = 0.
-              <lv_value> = ls_xml_line2-value.
-            WHEN 'SATIR'.
-              TRANSLATE ls_xml_line2-name TO UPPER CASE.
-              ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_detay> TO <ls_satir>.
-            WHEN 'AboneNo' OR 'FaturaNo' OR 'FatTutar' OR 'Doviz' OR 'SonOdmTarih' OR 'OdnTutarYTL' OR 'OdnTutarUSD' OR 'RefNo' OR 'Statu'.
-              TRANSLATE ls_xml_line2-name TO UPPER CASE.
-              ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_satir> TO <lv_value>.
+              ASSIGN COMPONENT ls_xml_line2-name OF STRUCTURE <ls_response_line> TO FIELD-SYMBOL(<lv_value>).
               CHECK sy-subrc = 0.
               <lv_value> = ls_xml_line2-value.
           ENDCASE.
         ENDLOOP.
       ENDLOOP.
-      READ TABLE lt_xml_response INTO DATA(ls_xml_response) WITH KEY detay-satir-faturano = ms_invoice_data-invoicenumber.
-      SHIFT ls_xml_response-detay-satir-fattutar    LEFT DELETING LEADING '0'.
-      SHIFT ls_xml_response-detay-satir-odntutarytl LEFT DELETING LEADING '0'.
-      IF ls_xml_response-detay-satir-odntutarytl IS NOT INITIAL AND ls_xml_response-detay-satir-odntutarytl GT 0.
-        es_collect_detail-payment_amount = ls_xml_response-detay-satir-odntutarytl.
+      READ TABLE lt_xml_response INTO DATA(ls_xml_response) WITH KEY faturano = ms_invoice_data-invoicenumber.
+      SHIFT ls_xml_response-fattutar    LEFT DELETING LEADING '0'.
+      SHIFT ls_xml_response-odntutarytl LEFT DELETING LEADING '0'.
+      IF ls_xml_response-odntutarytl IS NOT INITIAL AND ls_xml_response-odntutarytl GT 0.
+        es_collect_detail-payment_amount = ls_xml_response-odntutarytl.
         es_collect_detail-payment_currency = 'TRY'.
       ELSE.
-        es_collect_detail-payment_amount = ls_xml_response-detay-satir-fattutar.
-        es_collect_detail-payment_currency = ls_xml_response-detay-satir-doviz.
+        es_collect_detail-payment_amount = ls_xml_response-fattutar.
+        es_collect_detail-payment_currency = ls_xml_response-doviz.
       ENDIF.
-      CONCATENATE ls_xml_response-detay-islemtrh(4) ls_xml_response-detay-islemtrh+5(2)
-      ls_xml_response-detay-islemtrh+8(2) INTO es_collect_detail-payment_date.
+      CONCATENATE ls_xml_response-odmtarih(4)
+                  ls_xml_response-odmtarih+5(2)
+                  ls_xml_response-odmtarih+8(2) INTO es_collect_detail-payment_date.
     ELSE.
       APPEND VALUE #( id = mc_id type = mc_error number = 014 ) TO rt_messages.
       adding_error_message(
