@@ -5,7 +5,6 @@
     DATA(lv_get_method) = request->get_method( ).
     /ui2/cl_json=>deserialize( EXPORTING json = lv_request_body CHANGING data = ms_request ).
 
-
     LOOP AT ms_request-invoicedata INTO DATA(ls_invoice_data) WHERE invoicestatus = mc_ready
                                                                  OR invoicestatus = mc_deleted.
       EXIT.
@@ -15,22 +14,15 @@
     ELSE.
       SELECT * FROM ydbs_t_bnk_dtype INTO TABLE @DATA(lt_bank_doctype).
       LOOP AT ms_request-invoicedata INTO DATA(ls_request).
-**testler sırasında entegrasyon iptal edildi çünkü
-**banka tarafı ile karşılıklı testler yavaş olacağı için bankadan tahsilat bilgisi gelmiş gibi davranması istendi.
-***        IF 1 = 2.
         DATA(lo_bank) = ycl_dbs_bank=>factory( iv_bankinternalid = ls_request-bankinternalid
-                                                iv_companycode    = ls_request-companycode
-                                                iv_customer       = ls_request-customer
-                                                iv_invoice_data   = ls_request  ).
+                                               iv_companycode    = ls_request-companycode
+                                               iv_customer       = ls_request-customer
+                                               iv_invoice_data   = ls_request  ).
         lo_bank->call_api( EXPORTING iv_api_type = mc_collect IMPORTING et_messages = lt_messages ).
         IF lt_messages IS NOT INITIAL.
           APPEND LINES OF lt_messages TO ms_response-messages.
         ENDIF.
-***        ENDIF.
         IF NOT line_exists( lt_messages[ type = mc_error ] ). "hata yoksa FI belgesi yarat.
-*testler sırasında entegrasyon iptal edildi çünkü
-*banka tarafı ile karşılıklı testler yavaş olacağı için bankadan tahsilat bilgisi gelmiş gibi davranması istendi.
-***          IF 1 = 2.
           lo_fi_doc = NEW #( is_invoice_data = ls_request
                              is_collect_detail = lo_bank->ms_collect_detail
                              is_bank_doctype = VALUE #( lt_bank_doctype[ companycode = ls_request-companycode bankinternalid = ls_request-bankinternalid ] OPTIONAL ) ).
@@ -43,27 +35,6 @@
           IF lt_collect_messages IS NOT INITIAL.
             APPEND LINES OF lt_collect_messages TO ms_response-messages.
           ENDIF.
-***          ENDIF.
-
-
-***            data ls_collect_detail TYPE ydbs_s_collect_detail.
-***            ls_collect_detail-payment_amount = ls_request-invoiceamount.
-***            ls_collect_detail-payment_currency = ls_Request-transactioncurrency.
-***            ls_collect_detail-payment_date = ls_request-invoiceduedate.
-***            lo_fi_doc = NEW #( is_invoice_data = ls_request
-***                               is_collect_detail = ls_collect_detail
-***                               is_bank_doctype = VALUE #( lt_bank_doctype[ companycode = ls_request-companycode bankinternalid = ls_request-bankinternalid ] OPTIONAL ) ).
-***            lo_fi_doc->create_collect_fi_doc(
-***              IMPORTING
-***                ev_accountingdocument = DATA(lv_collect_doc2)
-***                ev_fiscalyear         = DATA(lv_collect_year2)
-***                et_messages           = DATA(lt_collect_messages2)
-***            ).
-***            IF lt_collect_messages2 IS NOT INITIAL.
-***              APPEND LINES OF lt_collect_messages2 TO ms_response-messages.
-***            ENDIF.
-
-
         ENDIF.
         IF lv_collect_doc IS NOT INITIAL.
           UPDATE ydbs_t_log
@@ -79,7 +50,6 @@
              AND fiscalyear              = @ls_request-fiscalyear
              AND accountingdocumentitem  = @ls_request-accountingdocumentitem.
         ENDIF.
-*clear
         FREE: lo_bank , lo_fi_doc.
         CLEAR: lo_bank , lo_fi_doc , lv_collect_doc , lv_collect_year , lt_collect_messages , lt_messages .
       ENDLOOP.

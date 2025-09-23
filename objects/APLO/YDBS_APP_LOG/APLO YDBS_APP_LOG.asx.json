@@ -31,6 +31,10 @@
   [
    {
     "OBJECT":"YDBS_APP_LOG",
+    "SUBOBJECT":"YDBS_CLEARING_LOG"
+   },
+   {
+    "OBJECT":"YDBS_APP_LOG",
     "SUBOBJECT":"YDBS_LIMIT_LOG"
    }
   ]
@@ -44,6 +48,12 @@
     "OBJECT":"YDBS_APP_LOG",
     "SUBOBJECT":"YDBS_LIMIT_LOG",
     "SUBOBJTXT":"Limit Log"
+   },
+   {
+    "SPRAS":"T",
+    "OBJECT":"YDBS_APP_LOG",
+    "SUBOBJECT":"YDBS_CLEARING_LOG",
+    "SUBOBJTXT":"Tahsilat Log"
    },
    {
     "SPRAS":"T",

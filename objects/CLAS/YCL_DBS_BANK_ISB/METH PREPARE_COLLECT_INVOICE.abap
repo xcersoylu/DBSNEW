@@ -6,11 +6,7 @@
                 ms_invoice_data-invoiceduedate+4(2) '-'
                 ms_invoice_data-invoiceduedate+6(2)
     INTO lv_bdate.
-    CONCATENATE ms_invoice_data-invoiceduedate(4) '-'
-                ms_invoice_data-invoiceduedate+4(2) '-'
-                ms_invoice_data-invoiceduedate+6(2)
-    INTO lv_edate.
-
+    lv_edate = lv_bdate.
 
     CONCATENATE
 '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="http://isbank.com/OpSvcs/PaymentMgmtProcessing/DDS/DDSGeneric/Service/V1" xmlns:v11="http://isbank.com/OpSvcs/PaymentMgmtProcessing/DDS/Core/Schema/V1">'
