@@ -43,7 +43,7 @@
           IF ls_parameter-low IS INITIAL AND ls_parameter-high IS INITIAL.
             APPEND VALUE #( sign = ls_parameter-sign
                             option = 'EQ'
-                            low = cl_abap_context_info=>get_system_date(  ) ) TO lr_duedate.
+                            low = ycl_dbs_common=>get_local_time(  )-date ) TO lr_duedate.
           ELSE.
             APPEND VALUE #( sign = ls_parameter-sign
                             option = ls_parameter-option
