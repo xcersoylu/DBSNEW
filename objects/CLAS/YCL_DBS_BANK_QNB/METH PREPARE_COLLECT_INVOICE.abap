@@ -1,9 +1,11 @@
   METHOD prepare_collect_invoice.
     CONCATENATE
-  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nan="http://nanopetdbs.driver.maestro.ibtech.com">'
+*  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nan="http://nanopetdbs.driver.maestro.ibtech.com">'
+  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:' ms_service_info-additional_field2 '>'
      '<soapenv:Header/>'
      '<soapenv:Body>'
-        '<nan:akibetSorgula>'
+*        '<nan:akibetSorgula>'
+        '<' ms_service_info-additional_field1 ':akibetSorgula>'
            '<!--Optional:-->'
            '<akibetSorgulaRequest>'
               '<!--Optional:-->'
@@ -19,7 +21,8 @@
               '<!--Optional:-->'
               '<userName>' ms_service_info-username '</userName>'
            '</akibetSorgulaRequest>'
-        '</nan:akibetSorgula>'
+*        '</nan:akibetSorgula>'
+        '</' ms_service_info-additional_field1 ':akibetSorgula>'
      '</soapenv:Body>'
   '</soapenv:Envelope>' INTO rv_request.
 

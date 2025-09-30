@@ -3,10 +3,12 @@
     lv_amount = ms_invoice_data-invoiceamount.
     CONDENSE lv_amount.
     CONCATENATE
-  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nan="http://nanopetdbs.driver.maestro.ibtech.com">'
+*  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nan="http://nanopetdbs.driver.maestro.ibtech.com">'
+  '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:' ms_service_info-additional_field2 '>'
      '<soapenv:Header/>'
      '<soapenv:Body>'
-        '<nan:faturaYukle>'
+*        '<nan:faturaYukle>'
+        '<' ms_service_info-additional_field1 ':faturaYukle>'
            '<!--Optional:-->'
            '<faturaYukleHYTKRequest>'
               '<!--Optional:-->'
@@ -26,6 +28,7 @@
               '<!--Optional:-->'
               '<vadeTarihi>' ms_invoice_data-invoiceduedate '</vadeTarihi>'
            '</faturaYukleHYTKRequest>'
+        '</' ms_service_info-additional_field1 ':faturaYukle>'
         '</nan:faturaYukle>'
      '</soapenv:Body>'
   '</soapenv:Envelope>' INTO rv_request.
